@@ -35,12 +35,12 @@ public class ProjectServiceImpl implements ProjectService {
         createdProject.setOwner(user);
         createdProject.setCategory(project.getCategory());
         createdProject.getTeam().add(user);
-        Project savedProject = projectRepository.save(createdProject);
+
         Chat chat = new Chat();
-        chat.setProject(savedProject);
-        Chat createdChat = chatService.createChat(chat);
-        savedProject.setChat(createdChat);
-        savedProject=projectRepository.save(savedProject);
+        chat.setName("Chat for project: " + project.getName());
+        chat.setProject(createdProject);
+        createdProject.setChat(chat);
+        Project savedProject = projectRepository.save(createdProject);
         /// /
         return savedProject;
     }
@@ -68,12 +68,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDTO getProjectById(Long id) throws Exception {
-        Optional<Project> project=projectRepository.findById(id);
+        Optional<Project> project=projectRepository.findByIdWithChat(id);
         if(project.isEmpty()){
             throw new Exception("Project not found");
         }
         Project p=project.get();
         ProjectDTO dto=new ProjectDTO();
+        dto.setChat(p.getChat());
         dto.setId(p.getId());
         dto.setName(p.getName());
         dto.setDescription(p.getDescription());

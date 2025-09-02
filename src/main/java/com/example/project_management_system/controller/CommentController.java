@@ -27,7 +27,7 @@ public class CommentController {
                                                   @RequestHeader("Authorization") String token
                                                   ) throws Exception {
         User user=userService.findUserProfileByJwt(token);
-        Comments comments=commentService.createComment(createCommentRequest.getIssueId(),user.getId(),createCommentRequest.getContent());
+        commentService.createComment(createCommentRequest.getIssueId(),user.getId(),createCommentRequest.getContent());
         MessageResponse mes= new MessageResponse("Comment created");
         return new ResponseEntity<>(mes, HttpStatus.CREATED);
     }
