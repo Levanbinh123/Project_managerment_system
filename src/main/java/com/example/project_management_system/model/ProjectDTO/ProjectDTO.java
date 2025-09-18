@@ -1,6 +1,7 @@
 package com.example.project_management_system.model.ProjectDTO;
 
 import com.example.project_management_system.model.Chat;
+import com.example.project_management_system.model.User;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -13,4 +14,7 @@ public class ProjectDTO {
     private String category;
     private List<String> tags= new ArrayList<>();
     private Chat chat;
+    private User owner;
+    private List<User> team= new ArrayList<>();
+
 }

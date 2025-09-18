@@ -65,7 +65,7 @@ public class IssueServiceImpl implements IssueService {
     public Issue addUserToIssue(Long issueId, Long userId) throws Exception {
         User user=userService.findUserById(userId);
         Issue issue=issueRepository.findById(issueId).get();
-        issue.setAssignee(user);
+            issue.setAssignee(user);
         return issueRepository.save(issue);
     }
 

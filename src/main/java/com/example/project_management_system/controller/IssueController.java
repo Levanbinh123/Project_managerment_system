@@ -33,8 +33,11 @@ public class IssueController {
         dto.setPriority(issue.getPriority());
         dto.setProjectId(issue.getProject().getId());
         dto.setProjectName(issue.getProject().getName());
+        dto.setAssigneeId(issue.getAssignee().getId());
+        dto.setAssigneeName(issue.getAssignee().getFullName());
         dto.setStatus(issue.getStatus());
         dto.setTitle(issue.getTitle());
+        dto.setTags(issue.getTags());
         return ResponseEntity.ok(dto);
 
 

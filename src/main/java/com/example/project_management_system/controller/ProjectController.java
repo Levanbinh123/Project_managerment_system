@@ -6,6 +6,7 @@ import com.example.project_management_system.model.Invitation;
 import com.example.project_management_system.model.Project;
 import com.example.project_management_system.model.ProjectDTO.UpdateProject;
 import com.example.project_management_system.model.User;
+import com.example.project_management_system.repository.ProjectRepository;
 import com.example.project_management_system.request.InviteRequest;
 import com.example.project_management_system.response.MessageResponse;
 import com.example.project_management_system.service.service.InvitationService;
@@ -22,6 +23,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectController {
+    @Autowired
+    private ProjectRepository  projectRepository;
     @Autowired
     private InvitationService invitationService;
     @Autowired
@@ -118,4 +121,5 @@ public class ProjectController {
         projectService.addUserToProject(invitation.getProjectId(),user.getId());
         return new ResponseEntity<>(invitation, HttpStatus.ACCEPTED);
     }
+
 }

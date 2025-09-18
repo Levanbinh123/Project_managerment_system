@@ -3,6 +3,7 @@ package com.example.project_management_system.service.impl;
 import com.example.project_management_system.model.Chat;
 import com.example.project_management_system.model.Message;
 import com.example.project_management_system.model.User;
+import com.example.project_management_system.repository.ChatRepository;
 import com.example.project_management_system.repository.MessageRepository;
 import com.example.project_management_system.repository.UserRepository;
 import com.example.project_management_system.service.service.MessageService;
@@ -21,14 +22,16 @@ public class MessageServiceImpl implements MessageService {
     private UserRepository userRepository;
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    private ChatRepository  chatRepository;
 
     @Override
-    public Message saveMessage(Long senderId, Long projectId, String content) throws Exception {
-        User sender = userRepository.findById(senderId).orElseThrow(()  -> new RuntimeException("User not found"));
+    public Message saveMessage( Long senderId,Long projectId, String content) throws Exception {
+       User user=userRepository.findById(senderId).get();
         Chat chat=projectService.getProjectById(projectId).getChat();
         Message message=new Message();
+        message.setSender(user);
         message.setContent(content);
-        message.setSender(sender);
         message.setCreatedAt(LocalDateTime.now());
         message.setChat(chat);
         Message savedMessage=messageRepository.save(message);

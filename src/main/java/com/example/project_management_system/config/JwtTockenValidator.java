@@ -24,6 +24,7 @@ import java.util.List;
 public class JwtTockenValidator extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws SecurityException, IOException, ServletException {
+
         String jwt=request.getHeader(JwtConstant.JWT_HEADER);
         if(jwt!=null){
             jwt=jwt.substring(7);

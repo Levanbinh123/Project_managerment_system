@@ -31,7 +31,7 @@ public class AuthController {
     private SubcriptionService subcriptionService;
     @Autowired
     private CustomerUserDetaisImpl customerUserDetais;
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws Exception {
         User isUserExist=userRepository.findByEmail(user.getEmail());
         if(isUserExist!=null){
@@ -52,7 +52,7 @@ public class AuthController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
 
     }
-    @PostMapping("/singing")
+    @PostMapping("/singup")
     public ResponseEntity<AuthResponse> signinHandler(@RequestBody LoginRequest loginRequest) throws Exception {
         String userName=loginRequest.getEmail();
         String password=loginRequest.getPassword();

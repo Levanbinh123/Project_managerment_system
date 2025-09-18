@@ -1,5 +1,6 @@
 package com.example.project_management_system.controller;
 
+import com.example.project_management_system.config.JwtProvider;
 import com.example.project_management_system.model.Chat;
 import com.example.project_management_system.model.Message;
 import com.example.project_management_system.model.User;
@@ -32,7 +33,8 @@ public class MessageController {
         if(chats==null){
             throw new Exception("chat not found");
         }
-        Message sendMessage=messageService.saveMessage(createMessageRequest.getSenderId(),createMessageRequest.getProjectId(),createMessageRequest.getContent());
+        Message sendMessage=messageService.saveMessage(user.getId(), createMessageRequest.getProjectId(),createMessageRequest.getContent());
+
         return ResponseEntity.ok(sendMessage);
     }
     @GetMapping("/chat/{projectId}")

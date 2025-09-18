@@ -22,7 +22,7 @@ public class Chat {
     @JoinColumn(name = "project_id")
     private Project project;
     @JsonIgnore
-    @OneToMany(mappedBy = "chat",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "chat",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Message> messages;
     @ManyToMany
     private List<User> users= new ArrayList<>();

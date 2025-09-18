@@ -47,22 +47,35 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDTO> getProjectByTeam(User user, String category, String tag) throws Exception {
-        List<Project> projects=projectRepository.findByTeamContainingOrOwner(user,user);
-        if(category!=null){
-            projects=projects.stream().filter(p->p.getCategory().equals(category)).collect(Collectors.toList());
+        // Lấy tất cả project mà user là owner hoặc trong team
+        List<Project> projects = projectRepository.findByTeamContainingOrOwner(user, user);
+
+        // Lọc theo category nếu category không null
+        if (category != null && !category.isEmpty()) {
+            projects = projects.stream()
+                    .filter(p -> p.getCategory() != null && p.getCategory().equals(category))
+                    .collect(Collectors.toList());
         }
-        if(tag!=null){
-            projects=projects.stream().filter(p->p.getTags().contains(tag)).collect(Collectors.toList());
+
+        // Lọc theo tag nếu tag không null
+        if (tag != null && !tag.isEmpty()) {
+            projects = projects.stream()
+                    .filter(p -> p.getTags() != null && p.getTags().contains(tag))
+                    .collect(Collectors.toList());
         }
-        ProjectDTO dto=new ProjectDTO();
-        List<ProjectDTO> dtos=new ArrayList<>();
-        for(Project p: projects){
+
+        // Chuyển Project sang ProjectDTO
+        List<ProjectDTO> dtos = new ArrayList<>();
+        for (Project p : projects) {
+            ProjectDTO dto = new ProjectDTO();
+            dto.setId(p.getId());
             dto.setName(p.getName());
             dto.setDescription(p.getDescription());
-            dto.setTags(p.getTags());
-            dto.setCategory(p.getCategory());
+            dto.setTags(p.getTags() != null ? p.getTags() : new ArrayList<>()); // đảm bảo tags không null
+            dto.setCategory(p.getCategory() != null ? p.getCategory() : "No Category"); // default nếu null
             dtos.add(dto);
         }
+
         return dtos;
     }
 
@@ -80,6 +93,8 @@ public class ProjectServiceImpl implements ProjectService {
         dto.setDescription(p.getDescription());
         dto.setTags(p.getTags());
         dto.setCategory(p.getCategory());
+        dto.setOwner(p.getOwner());
+        dto.setTeam(p.getTeam());
         return dto;
 
 

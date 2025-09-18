@@ -1,5 +1,6 @@
 package com.example.project_management_system.controller;
 
+import com.example.project_management_system.model.CommentDTO.CommentDTO;
 import com.example.project_management_system.model.Comments;
 import com.example.project_management_system.model.User;
 import com.example.project_management_system.request.CreateCommentRequest;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,13 +25,16 @@ public class CommentController {
     @Autowired
     private UserService userService;
     @PostMapping
-    public ResponseEntity<MessageResponse> createComment(@RequestBody CreateCommentRequest createCommentRequest,
-                                                  @RequestHeader("Authorization") String token
+    public ResponseEntity<CommentDTO> createComment(@RequestBody CreateCommentRequest createCommentRequest,
+                                                    @RequestHeader("Authorization") String token
                                                   ) throws Exception {
         User user=userService.findUserProfileByJwt(token);
-        commentService.createComment(createCommentRequest.getIssueId(),user.getId(),createCommentRequest.getContent());
-        MessageResponse mes= new MessageResponse("Comment created");
-        return new ResponseEntity<>(mes, HttpStatus.CREATED);
+       Comments comment= commentService.createComment(createCommentRequest.getIssueId(),user.getId(),createCommentRequest.getContent());
+       CommentDTO dto=new CommentDTO();
+       dto.setId(comment.getId());
+       dto.setContent(comment.getContent());
+       dto.setUser(user);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
     @DeleteMapping("/{commentId}")
     public ResponseEntity<MessageResponse> deleteComment(@PathVariable Long commentId, @RequestHeader("Authorization") String token) throws Exception {
@@ -41,9 +46,18 @@ public class CommentController {
 
     }
     @GetMapping("/{issueId}")
-    public ResponseEntity<List<Comments>> getCommentsByIssueId(@PathVariable Long issueId) {
+    public ResponseEntity<List<CommentDTO>> getCommentsByIssueId(@PathVariable Long issueId) {
         List<Comments> comments=commentService.findCommentsByIssueId(issueId);
-        return new ResponseEntity<>(comments,HttpStatus.OK);
+
+    List<CommentDTO> dtos=new ArrayList<>();
+        for(Comments comment:comments){
+            CommentDTO dto=new CommentDTO();
+            dto.setId(comment.getId());
+            dto.setContent(comment.getContent());
+            dto.setUser(comment.getUser());
+            dtos.add(dto);
+        }
+        return new ResponseEntity<>(dtos,HttpStatus.OK);
     }
 
 
