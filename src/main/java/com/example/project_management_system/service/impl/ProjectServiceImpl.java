@@ -81,7 +81,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDTO getProjectById(Long id) throws Exception {
-        Optional<Project> project=projectRepository.findByIdWithChat(id);
+        Optional<Project> project=projectRepository.findById(id);
         if(project.isEmpty()){
             throw new Exception("Project not found");
         }

@@ -43,7 +43,6 @@ public class CommentController {
         MessageResponse messageResponse=new MessageResponse();
         messageResponse.setMessage("Comment deleted");
         return new ResponseEntity<>(messageResponse,HttpStatus.OK);
-
     }
     @GetMapping("/{issueId}")
     public ResponseEntity<List<CommentDTO>> getCommentsByIssueId(@PathVariable Long issueId) {

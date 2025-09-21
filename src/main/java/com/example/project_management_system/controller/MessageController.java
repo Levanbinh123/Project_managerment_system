@@ -5,6 +5,7 @@ import com.example.project_management_system.model.Chat;
 import com.example.project_management_system.model.Message;
 import com.example.project_management_system.model.User;
 import com.example.project_management_system.request.CreateMessageRequest;
+import com.example.project_management_system.request.SendMessageResponse;
 import com.example.project_management_system.service.service.MessageService;
 import com.example.project_management_system.service.service.ProjectService;
 import com.example.project_management_system.service.service.UserService;
@@ -24,7 +25,7 @@ public class MessageController {
     @Autowired
     private UserService userService;
     @PostMapping("/send")
-    public ResponseEntity<Message> sendMessages(@RequestBody CreateMessageRequest createMessageRequest) throws Exception {
+    public ResponseEntity<SendMessageResponse> sendMessages(@RequestBody CreateMessageRequest createMessageRequest) throws Exception {
         User user=userService.findUserById(createMessageRequest.getSenderId());
         if(user==null){
             throw new Exception("user not found");
@@ -34,8 +35,11 @@ public class MessageController {
             throw new Exception("chat not found");
         }
         Message sendMessage=messageService.saveMessage(user.getId(), createMessageRequest.getProjectId(),createMessageRequest.getContent());
-
-        return ResponseEntity.ok(sendMessage);
+        SendMessageResponse sendMessageResponse=new SendMessageResponse();
+        sendMessageResponse.setId(sendMessage.getId());
+        sendMessageResponse.setContent(sendMessage.getContent());
+        sendMessageResponse.setCreatedAt(sendMessage.getCreatedAt());
+        return ResponseEntity.ok(sendMessageResponse);
     }
     @GetMapping("/chat/{projectId}")
     public ResponseEntity<List<Message>> getMessagesByProjectId(@PathVariable Long projectId) throws Exception {

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/issues")
@@ -25,7 +26,9 @@ public class IssueController {
     private UserService userService;
     @GetMapping("/{issueId}")
     public ResponseEntity<IssueDTO> getIssueById(@PathVariable Long issueId) throws Exception {
-            Issue issue=issueService.getIssueNyId(issueId);
+            Optional<Issue> issueOptional= Optional.ofNullable(issueService.getIssueNyId(issueId));
+         Issue issue = issueOptional.orElseThrow(() -> new RuntimeException("Issue not found"));
+
         IssueDTO dto = new IssueDTO();
         dto.setId(issue.getId());
         dto.setDescription(issue.getDescription());
@@ -33,8 +36,13 @@ public class IssueController {
         dto.setPriority(issue.getPriority());
         dto.setProjectId(issue.getProject().getId());
         dto.setProjectName(issue.getProject().getName());
-        dto.setAssigneeId(issue.getAssignee().getId());
-        dto.setAssigneeName(issue.getAssignee().getFullName());
+        if (issue.getAssignee() != null) {
+            dto.setAssigneeId(issue.getAssignee().getId());
+            dto.setAssigneeName(issue.getAssignee().getFullName());
+        } else {
+            dto.setAssigneeId(null);
+            dto.setAssigneeName(null);
+        }
         dto.setStatus(issue.getStatus());
         dto.setTitle(issue.getTitle());
         dto.setTags(issue.getTags());
