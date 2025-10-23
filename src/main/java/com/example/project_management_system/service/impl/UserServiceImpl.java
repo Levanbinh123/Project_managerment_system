@@ -7,6 +7,7 @@ import com.example.project_management_system.service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,5 +41,29 @@ public class UserServiceImpl implements UserService {
     public User updateUsersProjectSize(User user, int number) throws Exception {
         user.setProjectSize(user.getProjectSize()+number);
         return userRepository.save(user);
+    }
+
+    @Override
+    public void deletedUser(Long userId) throws Exception {
+        userRepository.deleteById(userId);
+    }
+
+    @Override
+    public User updatedUser(Long userId, User user) throws Exception {
+        User updatedUser = userRepository.findById(userId).orElse(null);
+        if (updatedUser == null) {
+            throw new Exception("user not found");
+        }
+        updatedUser.setEmail(user.getEmail());
+        updatedUser.setRole(user.getRole());
+        updatedUser.setPassword(user.getPassword());
+        updatedUser.setFullName(user.getFullName());
+        User userUpdated = userRepository.save(updatedUser);
+        return userUpdated;
+    }
+
+    @Override
+    public List<User> findAllUser() throws Exception {
+        return userRepository.findAll();
     }
 }

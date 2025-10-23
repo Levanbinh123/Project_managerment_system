@@ -39,6 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
         Chat chat = new Chat();
         chat.setName("Chat for project: " + project.getName());
         chat.setProject(createdProject);
+        chat.getUsers().add(user);
         createdProject.setChat(chat);
         Project savedProject = projectRepository.save(createdProject);
         /// /
@@ -120,10 +121,13 @@ public class ProjectServiceImpl implements ProjectService {
     public void addUserToProject(Long projectId, Long userId) throws Exception {
         Project project = projectRepository.findById(projectId).get();
         User user=userService.findUserById(userId);
-        if(!project.getTeam().contains(user)){
-            project.getChat().getUsers().add(user);
-            project.getTeam().add(user);
-        }
+       for(User member:project.getTeam()){
+           if (member.getId().equals(userId)) {
+               return;
+           }
+       }
+        project.getChat().getUsers().add(user);
+        project.getTeam().add(user);
         projectRepository.save(project);
     }
 

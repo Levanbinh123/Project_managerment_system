@@ -12,4 +12,7 @@ public class SendMessageResponse {
     private Long id;
     private String content;
     private LocalDateTime createdAt;
+
+    public SendMessageResponse(Long id, String content, LocalDateTime createdAt) {
+    }
 }

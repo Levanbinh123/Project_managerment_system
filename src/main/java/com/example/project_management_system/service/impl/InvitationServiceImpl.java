@@ -1,13 +1,18 @@
 package com.example.project_management_system.service.impl;
 
 import com.example.project_management_system.model.Invitation;
+import com.example.project_management_system.model.Project;
+import com.example.project_management_system.model.User;
 import com.example.project_management_system.repository.InvitationRepository;
+import com.example.project_management_system.repository.ProjectRepository;
+import com.example.project_management_system.repository.UserRepository;
 import com.example.project_management_system.service.service.EmailService;
 import com.example.project_management_system.service.service.InvitationService;
 import com.example.project_management_system.service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -16,6 +21,11 @@ public class InvitationServiceImpl implements InvitationService {
     private InvitationRepository invitationRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
+
     @Override
     public void sendInviation(String email, Long projectId) throws Exception {
         String invitationToken= UUID.randomUUID().toString();
@@ -24,7 +34,7 @@ public class InvitationServiceImpl implements InvitationService {
         invitation.setEmail(email);
         invitation.setToken(invitationToken);
         invitationRepository.save(invitation);
-        String invitationLink="http://localhost:5173/accept_invitation="+invitationToken;
+        String invitationLink="http://localhost:5173/accept_invitation?token="+invitationToken;
         emailService.sendEmailWithToken(email,invitationLink);
     }
 
@@ -36,13 +46,11 @@ public class InvitationServiceImpl implements InvitationService {
         }
         return invitation;
     }
-
     @Override
     public String getTokenByUserEmail(String userEmail) {
         Invitation invitation = invitationRepository.findByEmail(userEmail);
         return invitation.getToken();
     }
-
     @Override
     public void deleteToken(String token) {
         Invitation invitation = invitationRepository.findByToken(token);

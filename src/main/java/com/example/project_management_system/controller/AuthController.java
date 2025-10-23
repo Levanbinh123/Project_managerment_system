@@ -2,6 +2,7 @@ package com.example.project_management_system.controller;
 
 import com.example.project_management_system.config.JwtProvider;
 import com.example.project_management_system.model.User;
+import com.example.project_management_system.model.enum_.Role;
 import com.example.project_management_system.repository.UserRepository;
 import com.example.project_management_system.request.LoginRequest;
 import com.example.project_management_system.response.AuthResponse;
@@ -41,6 +42,7 @@ public class AuthController {
         createdUser.setPassword(passwordEncoder.encode(user.getPassword()));
         createdUser.setEmail(user.getEmail());
         createdUser.setFullName(user.getFullName());
+        createdUser.setRole(Role.ROLE_USER);
         User savedUser=userRepository.save(createdUser);
         subcriptionService.createSubscription(savedUser);
         Authentication authentication= new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
@@ -53,7 +55,7 @@ public class AuthController {
 
     }
     @PostMapping("/singup")
-    public ResponseEntity<AuthResponse> signinHandler(@RequestBody LoginRequest loginRequest) throws Exception {
+    public ResponseEntity<AuthResponse> signHandler(@RequestBody LoginRequest loginRequest) throws Exception {
         String userName=loginRequest.getEmail();
         String password=loginRequest.getPassword();
         Authentication authentication=new UsernamePasswordAuthenticationToken(userName, password);

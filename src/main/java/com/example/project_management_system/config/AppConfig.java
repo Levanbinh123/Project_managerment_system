@@ -24,7 +24,10 @@ public class AppConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
         http.sessionManagement(Management->Management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(Authorize->Authorize.requestMatchers("/api/**").authenticated().anyRequest().permitAll()
+                .authorizeHttpRequests(Authorize->Authorize.
+                        requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/api/user/admin/**").hasRole("ADMIN")
+                        .anyRequest().permitAll()
                 ).addFilterBefore(new JwtTockenValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf->csrf.disable())
                 .cors(cors->cors.configurationSource(corsConfigrationSourse()));

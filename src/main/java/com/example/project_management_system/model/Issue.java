@@ -1,6 +1,7 @@
 package com.example.project_management_system.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,8 +25,11 @@ public class Issue {
     @ElementCollection
     private List<String> tags=new ArrayList<>();
     @ManyToOne
+    @JsonIgnoreProperties({"assignedIssues", "projects"})
     private User assignee;
     @ManyToOne
+    @JoinColumn(name = "project_id")
+    @JsonIgnoreProperties("issues")
     private Project project;
     @JsonIgnore
     @OneToMany(mappedBy = "issue",cascade = CascadeType.ALL, orphanRemoval = true)

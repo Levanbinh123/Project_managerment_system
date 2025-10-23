@@ -19,8 +19,7 @@ public class Comments {
     private LocalDateTime createdDateTime;
     @ManyToOne
     private User user;
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Issue issue;
 
 }
