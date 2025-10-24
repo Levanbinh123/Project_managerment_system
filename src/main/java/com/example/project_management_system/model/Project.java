@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +29,16 @@ public class Project {
     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Chat chat;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     @JsonIgnoreProperties({"assignedIssues", "projects"})
     private User owner;
     @OneToMany(mappedBy = "project",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Issue> issues = new ArrayList<>();
-    @ManyToMany
+    @ManyToMany( fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "project_team", // tên bảng trung gian
+            joinColumns = @JoinColumn(name = "project_id"), // khóa ngoại của Project
+            inverseJoinColumns = @JoinColumn(name = "user_id") // khóa ngoại của User
+    )
     private List<User>team= new ArrayList<>();
 }

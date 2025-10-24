@@ -25,5 +25,10 @@ public class Chat {
     @OneToMany(mappedBy = "chat",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Message> messages;
     @ManyToMany
+    @JoinTable(
+            name = "chat_users",
+            joinColumns = @JoinColumn(name = "chat_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> users= new ArrayList<>();
 }
