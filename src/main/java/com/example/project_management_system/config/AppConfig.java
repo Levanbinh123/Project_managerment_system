@@ -42,7 +42,8 @@ public class AppConfig {
                 config.setAllowedOrigins(Arrays.asList(
                         "http://localhost:3000",
                         "http://localhost:5173",
-                        "http://localhost:4200"
+                        "http://localhost:4200",
+                        "https://project-managerment-react12.vercel.app"
                 ));
                 config.setAllowedMethods(Collections.singletonList("*"));
                 config.setAllowCredentials(true);
